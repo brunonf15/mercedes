@@ -1,0 +1,24 @@
+# .gitignore
+
+# Node.js / npm
+node_modules/
+allure-results/
+npm-debug.log
+*.log
+
+# Playwright
+playwright-report/
+allure-report/
+*.screenshot.png
+*.screenshot.png.base64
+*.mp4
+*.mp4.base64
+*.webm
+*.webm.base64
+*.png
+*.png.base64
+
+# Other
+*.tmp
+*.swp
+*.DS_Store
