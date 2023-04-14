@@ -27,7 +27,7 @@ BeforeAll(async () => {
   page = await context.newPage();
 });
 
-Given('Open Mercedes-benz United Kingdom market', { timeout: 60000 }, async () => {
+Given('Open Mercedes-benz United Kingdom market', { timeout: 40000 }, async () => {
 
   await page.setViewportSize({ width: 1280, height: 820 }); // Set window size
 
@@ -45,7 +45,7 @@ Given('Open Mercedes-benz United Kingdom market', { timeout: 60000 }, async () =
 
 });
 
-When('Under “Our Models” - Select “Model: Hatchbacks”', async () => {
+When('Under “Our Models” - Select “Model: Hatchbacks”', { timeout: 10000 }, async () => {
 
   //Map and go to Hatchbacks button
   await page.$eval('button:has-text("Hatchbacks")', (element) => element.scrollIntoViewIfNeeded());
@@ -55,7 +55,7 @@ When('Under “Our Models” - Select “Model: Hatchbacks”', async () => {
 
 });
 
-When('Mouse over the “A Class” model available and proceed to “Build your car”', async () => {
+When('Mouse over the “A Class” model available and proceed to “Build your car”', { timeout: 10000 }, async () => {
 
   // Wait for the element A-Class to appear
   await page.waitForSelector('.dh-io-vmos_2pz0m');
@@ -111,7 +111,7 @@ When('Filter by Fuel type “Diesel”', { timeout: 30000 }, async () => {
 
 });
 
-When('Take and save a screenshot of the results', async () => {
+When('Take and save a screenshot of the results', { timeout: 10000 }, async () => {
 
   // Find the motorization-comparison element
   const element = await page.$('cc-motorization-comparison');
@@ -125,11 +125,11 @@ When('Take and save a screenshot of the results', async () => {
   await page.screenshot({ path: 'screenshot.png' });
 
   //Wait the fuel selector element to be fully closed
-  await page.waitForTimeout(2000);
+  await page.waitForTimeout(1000);
 
 });
 
-When('Save the value “£” of the highest and lowest price results in a text file', async () => {
+When('Save the value “£” of the highest and lowest price results in a text file', { timeout: 10000 }, async () => {
 
   await page.waitForSelector('[class="cc-motorization-header__price--with-environmental-hint"]'); // Wait for the selector to be visible
   const items = await page.$$('[class="cc-motorization-header__price--with-environmental-hint"]'); // Find all elements matching the selector
