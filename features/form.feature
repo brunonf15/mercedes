@@ -7,5 +7,5 @@ Feature: Submit a form
     And Mouse over the “A Class” model available and proceed to “Build your car”
     And Filter by Fuel type “Diesel”
     Then Take and save a screenshot of the results
-    #And Save the value “£” of the highest and lowest price results in a text file
+    And Save the value “£” of the highest and lowest price results in a text file
 

@@ -8,6 +8,7 @@ let context;
 let page;
 let headless = process.env.HEADLESS !== 'false';
 const browserName = process.env.BROWSER || 'chromium';
+const fs = require('fs');
 
 BeforeAll(async () => {
   // Access the browser environment variable or use 'chromium' as default
@@ -113,19 +114,53 @@ When('Filter by Fuel type “Diesel”', async () => {
 
 When('Take and save a screenshot of the results', async () => {
 
-// Find the motorization-comparison element
-const element = await page.$('cc-motorization-comparison');
+  // Find the motorization-comparison element
+  const element = await page.$('cc-motorization-comparison');
 
-// Scroll to the element to be better to take a screenshot
-await element.scrollIntoViewIfNeeded();
-await element.click({ force: true });
-await page.waitForTimeout(2000);
+  // Scroll to the element to be better to take a screenshot
+  await element.scrollIntoViewIfNeeded();
+  await element.click({ force: true });
+  await page.waitForTimeout(2000);
 
-//Take the screenshot
-await page.screenshot({ path: 'screenshot.png' });
+  //Take the screenshot
+  await page.screenshot({ path: 'screenshot.png' });
 
-//Wait the fuel selector element to be fully closed
-await page.waitForTimeout(2000);
+  //Wait the fuel selector element to be fully closed
+  await page.waitForTimeout(2000);
+
+});
+
+
+When('Save the value “£” of the highest and lowest price results in a text file', async () => {
+
+  await page.waitForSelector('[class="cc-motorization-header__price--with-environmental-hint"]'); // Wait for the selector to be visible
+  const items = await page.$$('[class="cc-motorization-header__price--with-environmental-hint"]'); // Find all elements matching the selector
+
+  console.log('Number of elements:', items.length); // Log the number of elements found
+
+  let highestPrice = Number.NEGATIVE_INFINITY; // Initialize highest price to negative infinity
+  let lowestPrice = Number.POSITIVE_INFINITY; // Initialize lowest price to positive infinity
+
+  for (const item of items) {
+    const text = await item.evaluate(el => el.textContent); // Get the text content of the element
+    const price = parseFloat(text.replace(/[^\d.]/g, '')); // Extract numeric value from text
+    if (!isNaN(price)) { // Check if extracted value is a valid number
+      if (price > highestPrice) { // Update highest price if necessary
+        highestPrice = price;
+      }
+      if (price < lowestPrice) { // Update lowest price if necessary
+        lowestPrice = price;
+      }
+    }
+  }
+
+  const prices = [highestPrice, lowestPrice]; // Create an array with highest and lowest prices
+  console.log('Highest Price:', highestPrice); // Log the highest price
+  console.log('Lowest Price:', lowestPrice); // Log the lowest price
+
+  // Write prices to file using writeFileSync
+
+  fs.writeFileSync('prices.txt', prices.join('\n'));
 
 });
 
