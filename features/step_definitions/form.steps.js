@@ -45,7 +45,7 @@ Given('Open Mercedes-benz United Kingdom market', { timeout: 60000 }, async () =
 });
 
 
-When('Under “Our Models” - Select “Model: Hatchbacks”', { timeout: 60000 }, async () => {
+When('Under “Our Models” - Select “Model: Hatchbacks”', { timeout: 15000 }, async () => {
 
   //Map and go to Hatchbacks button
   await page.$eval('button:has-text("Hatchbacks")', (element) => element.scrollIntoViewIfNeeded());
@@ -54,6 +54,36 @@ When('Under “Our Models” - Select “Model: Hatchbacks”', { timeout: 60000
   await page.click('button:has-text("Hatchbacks")');
 
 });
+
+When('Mouse over the “A Class” model available and proceed to “Build your car”', async () => {
+
+  // Wait for the element A-Class to appear
+await page.waitForSelector('.dh-io-vmos_2pz0m');
+
+// Get the element handle
+const elementHandle = await page.$('.dh-io-vmos_2pz0m');
+
+await elementHandle.scrollIntoViewIfNeeded();
+
+// Hover over the element
+await elementHandle.hover();
+
+//Map Build your car button
+
+//getByRole('menuitem', { name: 'Build your car' }).getByRole('link', { name: 'Build your car' })
+await page.getByRole('menuitem', { name: 'Build your car' }).getByRole('link', { name: 'Build your car' }).click();
+
+//It was necessary to do it, I don't know why, I will ask it on interview
+if (browserName === 'webkit') {
+  await page.getByRole('menuitem', { name: 'Build your car' }).getByRole('link', { name: 'Build your car' }).click();
+}
+
+// wait until the A-Class page is loaded
+await page.waitForURL('**/A-KLASSE/**', { timeout: 60000 });
+
+});
+
+
 
 
 AfterAll(async () => {
