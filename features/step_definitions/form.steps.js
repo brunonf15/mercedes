@@ -45,8 +45,7 @@ Given('Open Mercedes-benz United Kingdom market', { timeout: 60000 }, async () =
 
 });
 
-
-When('Under “Our Models” - Select “Model: Hatchbacks”', { timeout: 15000 }, async () => {
+When('Under “Our Models” - Select “Model: Hatchbacks”', async () => {
 
   //Map and go to Hatchbacks button
   await page.$eval('button:has-text("Hatchbacks")', (element) => element.scrollIntoViewIfNeeded());
@@ -79,12 +78,12 @@ When('Mouse over the “A Class” model available and proceed to “Build your 
     await page.getByRole('menuitem', { name: 'Build your car' }).getByRole('link', { name: 'Build your car' }).click();
   }
 
-  // wait until the A-Class page is loaded
-  await page.waitForURL('**/A-KLASSE/**', { timeout: 60000 });
-
 });
 
-When('Filter by Fuel type “Diesel”', async () => {
+When('Filter by Fuel type “Diesel”', { timeout: 30000 }, async () => {
+
+  // wait until the A-Class page is loaded
+  await page.waitForURL('**/A-KLASSE/**', { timeout: 25000 });
 
   // Wait for the fuel selector element to appear
   await page.waitForSelector('#cc-app-container-main > div.cc-app-container__main-frame.cc-grid-container > div.cc-grid-container.ng-star-inserted > div > div:nth-child(2) > cc-motorization > cc-motorization-filters > cc-motorization-filters-form > form > div > div.cc-motorization-filters-form__primary > div > cc-motorization-filters-primary-filters > div > fieldset > div > ccwb-multi-select');
@@ -130,7 +129,6 @@ When('Take and save a screenshot of the results', async () => {
 
 });
 
-
 When('Save the value “£” of the highest and lowest price results in a text file', async () => {
 
   await page.waitForSelector('[class="cc-motorization-header__price--with-environmental-hint"]'); // Wait for the selector to be visible
@@ -163,7 +161,6 @@ When('Save the value “£” of the highest and lowest price results in a text 
   fs.writeFileSync('prices.txt', prices.join('\n'));
 
 });
-
 
 AfterAll(async () => {
   // Close the browser after the tests have completed
