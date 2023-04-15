@@ -48,6 +48,8 @@ To generate reports using Allure, you also need to have Java installed on your c
 npm run allure
 ```
 
+![Captura de Tela 2023-04-15 às 09 24 46](https://user-images.githubusercontent.com/5133283/232200517-9c0f4dd1-4e03-4425-acef-866bbaff2502.png)
+
 ## Browsers
 
 You can choose to run the tests on different browsers such as Firefox, Webkit, or Chromium by updating the environment variable. For example:
