@@ -1,6 +1,8 @@
 # Introduction
 Welcome to the Mercedes Benz Technical Challenge test automation project! This project utilizes Cucumber.js, Playwright, and Allure to perform end-to-end testing of a web application. 
 
+![Captura de Tela 2023-04-15 às 09 20 06](https://user-images.githubusercontent.com/5133283/232200291-84cf8bdd-24de-45de-9c91-ec48b50701a0.png)
+
 It is specifically designed to address the technical challenge presented by Mercedes Benz, providing a comprehensive framework for automated testing. With this project, you can easily write and execute tests to ensure the quality and reliability of your web application.
 
 ## Pre-requirements
