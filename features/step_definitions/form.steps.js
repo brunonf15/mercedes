@@ -1,7 +1,9 @@
-const { Given, When, Then, AfterAll, BeforeAll } = require('@cucumber/cucumber');
+const { Given, When, Then, AfterAll, BeforeAll,setDefaultTimeout } = require('@cucumber/cucumber');
 const { chromium, firefox, webkit } = require('playwright');
 const { expect } = require('chai');
-const path = require('path');
+
+// Set default timeout to 30 seconds (30000 milliseconds)
+setDefaultTimeout(30000);
 
 let browser;
 let context;
@@ -9,6 +11,8 @@ let page;
 let headless = process.env.HEADLESS !== 'false';
 const browserName = process.env.BROWSER || 'chromium';
 const fs = require('fs');
+let highestPrice = Number.NEGATIVE_INFINITY; // Initialize highest price to negative infinity
+let lowestPrice = Number.POSITIVE_INFINITY; // Initialize lowest price to positive infinity
 
 BeforeAll(async () => {
   // Access the browser environment variable or use 'chromium' as default
@@ -22,12 +26,13 @@ BeforeAll(async () => {
   } else {
     throw new Error(`Invalid browser name: ${browserName}`);
   }
-
+  
   context = await browser.newContext();
   page = await context.newPage();
+
 });
 
-Given('Open Mercedes-benz United Kingdom market', { timeout: 40000 }, async () => {
+Given('Open Mercedes-benz United Kingdom market', async () => {
 
   await page.setViewportSize({ width: 1280, height: 820 }); // Set window size
 
@@ -45,7 +50,7 @@ Given('Open Mercedes-benz United Kingdom market', { timeout: 40000 }, async () =
 
 });
 
-When('Under “Our Models” - Select “Model: Hatchbacks”', { timeout: 10000 }, async () => {
+When('Under “Our Models” - Select “Model: Hatchbacks”', async () => {
 
   //Map and go to Hatchbacks button
   await page.$eval('button:has-text("Hatchbacks")', (element) => element.scrollIntoViewIfNeeded());
@@ -55,7 +60,7 @@ When('Under “Our Models” - Select “Model: Hatchbacks”', { timeout: 10000
 
 });
 
-When('Mouse over the “A Class” model available and proceed to “Build your car”', { timeout: 10000 }, async () => {
+When('Mouse over the “A Class” model available and proceed to “Build your car”', async () => {
 
   // Wait for the element A-Class to appear
   await page.waitForSelector('.dh-io-vmos_2pz0m');
@@ -80,7 +85,7 @@ When('Mouse over the “A Class” model available and proceed to “Build your 
 
 });
 
-When('Filter by Fuel type “Diesel”', { timeout: 30000 }, async () => {
+When('Filter by Fuel type “Diesel”', async () => {
 
   // wait until the A-Class page is loaded
   await page.waitForURL('**/A-KLASSE/**', { timeout: 25000 });
@@ -111,7 +116,7 @@ When('Filter by Fuel type “Diesel”', { timeout: 30000 }, async () => {
 
 });
 
-When('Take and save a screenshot of the results', { timeout: 10000 }, async () => {
+Then('Take and save a screenshot of the results', async () => {
 
   // Find the motorization-comparison element
   const element = await page.$('cc-motorization-comparison');
@@ -129,15 +134,12 @@ When('Take and save a screenshot of the results', { timeout: 10000 }, async () =
 
 });
 
-When('Save the value “£” of the highest and lowest price results in a text file', { timeout: 10000 }, async () => {
+When('Save the value “£” of the highest and lowest price results in a text file', async () => {
 
   await page.waitForSelector('[class="cc-motorization-header__price--with-environmental-hint"]'); // Wait for the selector to be visible
   const items = await page.$$('[class="cc-motorization-header__price--with-environmental-hint"]'); // Find all elements matching the selector
 
   console.log('Number of elements:', items.length); // Log the number of elements found
-
-  let highestPrice = Number.NEGATIVE_INFINITY; // Initialize highest price to negative infinity
-  let lowestPrice = Number.POSITIVE_INFINITY; // Initialize lowest price to positive infinity
 
   for (const item of items) {
     const text = await item.evaluate(el => el.textContent); // Get the text content of the element
@@ -157,7 +159,6 @@ When('Save the value “£” of the highest and lowest price results in a text 
   console.log('Lowest Price:', lowestPrice); // Log the lowest price
 
   // Write prices to file using writeFileSync
-
   fs.writeFileSync('prices.txt', prices.join('\n'));
 
 });
