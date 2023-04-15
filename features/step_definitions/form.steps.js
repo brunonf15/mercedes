@@ -1,4 +1,4 @@
-const { Given, When, Then, AfterAll, BeforeAll,setDefaultTimeout } = require('@cucumber/cucumber');
+const { Given, When, Then, AfterAll, BeforeAll, setDefaultTimeout } = require('@cucumber/cucumber');
 const { chromium, firefox, webkit } = require('playwright');
 const { expect } = require('chai');
 
@@ -10,9 +10,7 @@ let context;
 let page;
 let headless = process.env.HEADLESS !== 'false';
 const browserName = process.env.BROWSER || 'chromium';
-const fs = require('fs');
-let highestPrice = Number.NEGATIVE_INFINITY; // Initialize highest price to negative infinity
-let lowestPrice = Number.POSITIVE_INFINITY; // Initialize lowest price to positive infinity
+const { getHighestAndLowestPrices, writePricesToFile } = require('../helpers.js');
 
 BeforeAll(async () => {
   // Access the browser environment variable or use 'chromium' as default
@@ -26,7 +24,7 @@ BeforeAll(async () => {
   } else {
     throw new Error(`Invalid browser name: ${browserName}`);
   }
-  
+
   context = await browser.newContext();
   page = await context.newPage();
 
@@ -141,25 +139,18 @@ When('Save the value “£” of the highest and lowest price results in a text 
 
   console.log('Number of elements:', items.length); // Log the number of elements found
 
-  for (const item of items) {
-    const text = await item.evaluate(el => el.textContent); // Get the text content of the element
-    const price = parseFloat(text.replace(/[^\d.]/g, '')); // Extract numeric value from text
-    if (!isNaN(price)) { // Check if extracted value is a valid number
-      if (price > highestPrice) { // Update highest price if necessary
-        highestPrice = price;
-      }
-      if (price < lowestPrice) { // Update lowest price if necessary
-        lowestPrice = price;
-      }
-    }
-  }
+  // Call the function and pass in the items array
+  const prices = await getHighestAndLowestPrices(items);
 
-  const prices = [highestPrice, lowestPrice]; // Create an array with highest and lowest prices
+  // Access the highest and lowest prices from the returned array
+  const highestPrice = prices[0];
+  const lowestPrice = prices[1];
+
   console.log('Highest Price:', highestPrice); // Log the highest price
   console.log('Lowest Price:', lowestPrice); // Log the lowest price
 
-  // Write prices to file using writeFileSync
-  fs.writeFileSync('prices.txt', prices.join('\n'));
+  // Write prices to file using writePricesToFile function
+  writePricesToFile(prices);
 
 });
 
