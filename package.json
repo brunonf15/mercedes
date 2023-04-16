@@ -1,15 +1,14 @@
 {
-  "name": "test",
+  "name": "cucumber-playwright-allure-mercedes-tests",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Test automation project built with Cucumber.js, Allure and Playwright for a web application.",
   "scripts": {
     "all": "cucumber-js",
     "only": "cucumber-js --tags @only",  
     "testWithAllureReport": "npx cucumber-js --format ./reporter.js",
     "allure": "allure serve"
   },
-  "author": "",
+  "author": "Bruno Figueiredo",
   "license": "ISC",
   "devDependencies": {
     "@cucumber/cucumber": "^8.11.1",
