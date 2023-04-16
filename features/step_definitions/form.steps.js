@@ -150,7 +150,7 @@ When('Save the value “£” of the highest and lowest price results in a text 
   console.log('Lowest Price:', lowestPrice); // Log the lowest price
 
   // Write prices to file using writePricesToFile function
-  writePricesToFile(prices);
+  writePricesToFile('prices.txt', prices);
 
 });
 

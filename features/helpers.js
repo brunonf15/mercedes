@@ -22,8 +22,8 @@ async function getHighestAndLowestPrices(items) {
     return [highestPrice, lowestPrice];
 }
 
-function writePricesToFile(prices) {
-    fs.writeFileSync('prices.txt', prices.join('\n'));
+function writePricesToFile(filename, prices) {
+    fs.writeFileSync(filename, prices.join('\n'));
 }
 
 module.exports = { getHighestAndLowestPrices, writePricesToFile };
